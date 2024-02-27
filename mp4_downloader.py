@@ -1,10 +1,11 @@
 import os
 from pytube import YouTube
+import argparse
 
 def get_valid_link() -> str:
     while True:
         try:
-            link = input("Video Link: ")
+            link = input("\nVideo Link: ")
             if link.lower() == 'exit':
                 return link
             yt = YouTube(link)
@@ -12,14 +13,13 @@ def get_valid_link() -> str:
         except Exception as e:
             print("Invalid link. Please provide a valid YouTube link.")
 
-def get_valid_directory(title) -> str:
+def get_valid_directory(title, primary_directory) -> str:
     while True:
         try:
-            print(f"Downloading:\n'{title}' | to the current directory.")
+            print(f"\nDownloading:\n'{title}' | to the primary directory: {primary_directory}")
             print("Press Enter to confirm or type a new path to change the destination.")
-            print("Example: C:\\Users\\Videos")
 
-            destination = str(input(">> ") or '.')
+            destination = str(input(">> ") or primary_directory)
 
             if destination.lower() == 'exit':
                 return destination
@@ -40,10 +40,14 @@ def download_video(link: str, destination: str) -> None:
 
     out_file = video.download(output_path=destination)
 
-    print(yt.title + "\nHas been successfully downloaded to " + destination)
+    print(f"{yt.title}\nHas been successfully downloaded to {destination}")
 
-def main() -> None:
-    print("Type 'exit' to exit the program.")
+def main():
+    parser = argparse.ArgumentParser(description="MP4 Downloader")
+    parser.add_argument("--primary_directory", default='.', help="Primary directory for downloading files.")
+    args = parser.parse_args()
+
+    print("\nType 'exit' to exit the program.")
     link = get_valid_link()
 
     if link.lower() == 'exit':
@@ -52,7 +56,7 @@ def main() -> None:
 
     yt = YouTube(link)
 
-    destination = get_valid_directory(yt.title)
+    destination = get_valid_directory(yt.title, args.primary_directory)
 
     if destination.lower() == 'exit':
         print("Exiting MP4 Downloader.")
