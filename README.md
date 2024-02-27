@@ -1,7 +1,7 @@
 # Youtube Downloader
 
 > [!CAUTION]
-> You will need 3.10.7 or greater version of [Python](https://www.python.org/downloads/) to use this application
+> You will need 3.10.7 version of [Python](https://www.python.org/downloads/release/python-3107/) to use this application
 
 ## Overview
 
@@ -15,7 +15,7 @@ The Youtube Downloader is a Python script that allows users to download audio or
 
 ## Install the required dependencies
 ```
-pip install -r requirements.txt
+pip install pytube
 ```
 
 ## Running with Launcher
