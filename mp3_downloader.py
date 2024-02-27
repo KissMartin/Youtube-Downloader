@@ -1,10 +1,11 @@
 import os
 from pytube import YouTube
+import argparse
 
 def get_valid_link() -> str:
     while True:
         try:
-            link = input("Music Link: ")
+            link = input("\nMusic Link: ")
             if link.lower() == 'exit':
                 return link
             yt = YouTube(link)
@@ -12,14 +13,15 @@ def get_valid_link() -> str:
         except Exception as e:
             print("Invalid link. Please provide a valid YouTube link.")
 
-def get_valid_directory(title) -> str:
-    print(f"Downloading:\n'{title}' | to the current directory.")
+def get_valid_directory(title, primary_directory) -> str:
+    print(f"\nDownloading:\n'{title}' | to the primary directory: {primary_directory}")
     print("Press Enter to confirm or type a new path to change the destination.")
-    print("Example: C:\\Users\\Music")
     while True:
         try:
+            destination = str(input(">> ") or primary_directory)
 
-            destination = str(input(">> ") or '.')
+            if destination.lower() == 'exit':
+                return destination
 
             if not os.path.exists(destination) or not os.path.isdir(destination):
                 raise ValueError("Invalid destination directory. Please provide a valid path.")
@@ -28,8 +30,12 @@ def get_valid_directory(title) -> str:
         except ValueError as ve:
             print(ve)
 
-def main() -> None:
-    print("Type 'exit' to exit the program.")
+def main():
+    parser = argparse.ArgumentParser(description="MP3 Downloader")
+    parser.add_argument("--primary_directory", default='.', help="Primary directory for downloading files.")
+    args = parser.parse_args()
+
+    print("\nType 'exit' to exit the program.")
     link = get_valid_link()
 
     if link.lower() == 'exit':
@@ -38,19 +44,17 @@ def main() -> None:
 
     yt = YouTube(link)
 
-    video = yt.streams.filter(only_audio=True).first()
+    destination = get_valid_directory(yt.title, args.primary_directory)
 
-    destination = get_valid_directory(yt.title)
+    print("\nDownloading...")
 
-    print("Downloading...")
-
-    out_file = video.download(output_path=destination)
+    out_file = yt.streams.filter(only_audio=True).first().download(output_path=destination)
 
     base, ext = os.path.splitext(out_file)
-    new_file = base + '.mp3'
+    new_file = os.path.join(destination, f"{yt.title}.mp3")
     os.rename(out_file, new_file)
 
-    print(yt.title + "\nHas been successfully downloaded to " + destination)
+    print(f"{yt.title}\nHas been successfully downloaded to {destination}\n")
 
 if __name__ == "__main__":
     main()
