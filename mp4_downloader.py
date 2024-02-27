@@ -34,7 +34,7 @@ def get_valid_directory(title, primary_directory) -> str:
 def download_video(link: str, destination: str) -> None:
     yt = YouTube(link)
 
-    print("Downloading...")
+    print("\nDownloading...")
 
     video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
 
