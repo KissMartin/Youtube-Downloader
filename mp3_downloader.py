@@ -13,6 +13,12 @@ def get_valid_link() -> str:
         except Exception as e:
             print("Invalid link. Please provide a valid YouTube link.")
 
+def sanitize_title(title: str) -> str:
+    invalid_chars = r'\/:*?"<>|'
+    for char in invalid_chars:
+        title = title.replace(char, '_')
+    return title
+
 def get_valid_directory(title, primary_directory) -> str:
     print(f"\nDownloading:\n'{title}' | to the primary directory: {primary_directory}")
     print("Press Enter to confirm or type a new path to change the destination.")
@@ -51,8 +57,11 @@ def main():
     out_file = yt.streams.filter(only_audio=True).first().download(output_path=destination)
 
     base, ext = os.path.splitext(out_file)
-    new_file = os.path.join(destination, f"{yt.title}.mp3")
-    os.rename(out_file, new_file)
+
+    sanitized_title = sanitize_title(yt.title)
+    new_file = os.path.join(destination, f"{sanitized_title}.mp3")
+
+    os.replace(out_file, new_file)
 
     print(f"{yt.title}\nHas been successfully downloaded to {destination}\n")
 
