@@ -1,5 +1,8 @@
 # Youtube Downloader
 
+> [!CAUTION]
+> You will need 3.10.7 or greater version of Python to use this application
+
 ## Overview
 
 The Youtube Downloader is a Python script that allows users to download audio or video content from YouTube by providing a valid video link. The script utilizes the Pytube library for handling YouTube video downloads.
@@ -9,6 +12,11 @@ The Youtube Downloader is a Python script that allows users to download audio or
 - Download audio or video content from YouTube.
 - Simple command-line interface.
 - Specify output directory for downloaded files.
+
+## Install the required dependencies
+```
+pip install -r requirements.txt
+```
 
 ## Running with Launcher
 
