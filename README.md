@@ -23,3 +23,5 @@ YouTube Downloader is a simple command-line tool that downloads audio (MP3) or v
 3. Follow the prompts to choose MP3 or MP4 download or to set the download directory.
 4. Enter a valid YouTube URL.
 5. Enjoy your downloaded content in the selected folder.
+
+## Disclaimer This project is for educational purposes only. Respect YouTube's terms of service and usage policies.
