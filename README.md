@@ -1,30 +1,25 @@
-# Youtube Downloader
-
-> [!CAUTION]
-> You will need 3.10.7 version of [Python](https://www.python.org/downloads/release/python-3107/) to use this application
+# YouTube Downloader
 
 ## Overview
 
-The Youtube Downloader is a Python script that allows users to download audio or video content from YouTube by providing a valid video link. The script utilizes the Pytube library for handling YouTube video downloads.
+YouTube Downloader is a simple command-line tool that downloads audio (MP3) or video (MP4) from YouTube using yt-dlp. It features:
+
+- Download audio or video by providing a YouTube URL.
+- Interactive CLI with progress bars.
+- Default download directory management.
+- Pre-built executables for easy use — no Python or dependencies required.
 
 ## Features
 
-- Download audio or video content from YouTube.
-- Simple command-line interface.
-- Specify output directory for downloaded files.
+- Download YouTube videos as MP3 or MP4.
+- Progress shown with a friendly progress bar.
+- Set and save a default download folder.
+- Works out-of-the-box from the `.exe` files in the releases.
 
-## Install the required dependencies
-```
-pip install pytube
-```
+## Usage
 
-## Running with Launcher
-
-To run the Youtube Downloader more conveniently, follow these steps:
-
-- Launch `launcher.exe` in the project folder.
-- Follow the on-screen instructions to provide the YouTube video link and customize download options.
-- Optionally, create a shortcut for `launcher.exe` for quick access.
-
-## Disclaimer
-This project is for educational purposes only. Respect YouTube's terms of service and usage policies.
+1. Download the latest release `.exe` from the Releases page.
+2. Run the `.exe` (e.g., `launcher.exe`).
+3. Follow the prompts to choose MP3 or MP4 download or to set the download directory.
+4. Enter a valid YouTube URL.
+5. Enjoy your downloaded content in the selected folder.
