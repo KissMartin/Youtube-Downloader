@@ -1,6 +1,22 @@
 import os
 import argparse
 import yt_dlp
+from tqdm import tqdm
+
+class YTDLLogger:
+    def debug(self, msg):
+        pass
+    def warning(self, msg):
+        pass
+    def error(self, msg):
+        print(f"[ERROR] {msg}")
+
+def tqdm_hook(d):
+    if d['status'] == 'downloading':
+        pbar.total = d.get('total_bytes') or d.get('total_bytes_estimate')
+        pbar.update(d['downloaded_bytes'] - pbar.n)
+    elif d['status'] == 'finished':
+        pbar.close()
 
 def get_valid_link() -> str:
     while True:
@@ -36,13 +52,18 @@ def main():
     if destination.lower() == "exit":
         return
 
+    global pbar
+    pbar = tqdm(unit='B', unit_scale=True, desc="Downloading", ncols=80)
+
     ydl_opts = {
         "format": "bestvideo+bestaudio/best",
         "outtmpl": os.path.join(destination, "%(title)s.%(ext)s"),
         "merge_output_format": "mp4",
+        "quiet": False,
+        "logger": YTDLLogger(),  # hide warnings
+        "progress_hooks": [tqdm_hook],
     }
 
-    print("\nDownloading...")
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([link])
 
