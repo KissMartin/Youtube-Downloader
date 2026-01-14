@@ -1,68 +1,52 @@
 import os
-from pytube import YouTube
 import argparse
+import yt_dlp
 
 def get_valid_link() -> str:
     while True:
-        try:
-            link = input("\nVideo Link: ")
-            if link.lower() == 'exit':
-                return link
-            yt = YouTube(link)
+        link = input("\nVideo Link: ")
+        if link.lower() == "exit":
             return link
-        except Exception as e:
-            print("Invalid link. Please provide a valid YouTube link.")
+        if link.startswith("http"):
+            return link
+        print("Invalid link.")
 
-def get_valid_directory(title, primary_directory) -> str:
+def get_valid_directory(primary_directory) -> str:
+    print(f"\nDestination directory: {primary_directory}")
+    print("Press Enter to confirm or type a new path.")
     while True:
-        try:
-            print(f"\nDownloading:\n'{title}' | to the primary directory: {primary_directory}")
-            print("Press Enter to confirm or type a new path to change the destination.")
-
-            destination = str(input(">> ") or primary_directory)
-
-            if destination.lower() == 'exit':
-                return destination
-
-            if not os.path.exists(destination) or not os.path.isdir(destination):
-                raise ValueError("Invalid destination directory. Please provide a valid path.")
-            
+        destination = input(">> ") or primary_directory
+        if destination.lower() == "exit":
             return destination
-        except ValueError as ve:
-            print(ve)
-
-def download_video(link: str, destination: str) -> None:
-    yt = YouTube(link)
-
-    print("\nDownloading...")
-
-    video = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-
-    out_file = video.download(output_path=destination)
-
-    print(f"{yt.title}\nHas been successfully downloaded to {destination}")
+        if os.path.isdir(destination):
+            return destination
+        print("Invalid directory.")
 
 def main():
-    parser = argparse.ArgumentParser(description="MP4 Downloader")
-    parser.add_argument("--primary_directory", default='.', help="Primary directory for downloading files.")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--primary_directory", default=".")
     args = parser.parse_args()
 
-    print("\nType 'exit' to exit the program.")
+    print("\nType 'exit' to exit.")
     link = get_valid_link()
-
-    if link.lower() == 'exit':
-        print("Exiting MP4 Downloader.")
+    if link.lower() == "exit":
         return
 
-    yt = YouTube(link)
-
-    destination = get_valid_directory(yt.title, args.primary_directory)
-
-    if destination.lower() == 'exit':
-        print("Exiting MP4 Downloader.")
+    destination = get_valid_directory(args.primary_directory)
+    if destination.lower() == "exit":
         return
 
-    download_video(link, destination)
+    ydl_opts = {
+        "format": "bestvideo+bestaudio/best",
+        "outtmpl": os.path.join(destination, "%(title)s.%(ext)s"),
+        "merge_output_format": "mp4",
+    }
+
+    print("\nDownloading...")
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([link])
+
+    print("Download complete.")
 
 if __name__ == "__main__":
     main()

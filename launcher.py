@@ -1,53 +1,43 @@
 import os
+import subprocess
 
 PRIMARY_DIRECTORY_FILE = "primary_directory.txt"
 
 def set_primary_directory():
-    print("Set the primary directory where files will be placed:")
-    primary_directory = input(">> ")
-    
-    with open(PRIMARY_DIRECTORY_FILE, 'w') as file:
-        file.write(primary_directory)
+    path = input("Set primary directory:\n>> ")
+    with open(PRIMARY_DIRECTORY_FILE, "w") as f:
+        f.write(path)
 
 def get_primary_directory():
     if os.path.exists(PRIMARY_DIRECTORY_FILE):
-        with open(PRIMARY_DIRECTORY_FILE, 'r') as file:
-            return file.read().strip()
-    else:
-        return "."
+        with open(PRIMARY_DIRECTORY_FILE) as f:
+            return f.read().strip()
+    return "."
 
-def launch_mp3_downloader():
-    os.system(f"python mp3_downloader.py --primary_directory {get_primary_directory()}")
-
-def launch_mp4_downloader():
-    os.system(f"python mp4_downloader.py --primary_directory {get_primary_directory()}")
+def launch(script):
+    subprocess.run([
+        "python",
+        script,
+        "--primary_directory",
+        get_primary_directory()
+    ])
 
 def main():
-    print("Welcome to the Downloader Launcher!")
-    
     if not os.path.exists(PRIMARY_DIRECTORY_FILE):
         set_primary_directory()
-    
-    while True:
-        print("\nChoose an option:")
-        print("1: Launch MP3 Downloader")
-        print("2: Launch MP4 Downloader")
-        print("3: Set Primary Directory")
-        print("0: Exit")
 
+    while True:
+        print("\n1: MP3\n2: MP4\n3: Set Directory\n0: Exit")
         choice = input(">> ")
 
-        if choice == '1':
-            launch_mp3_downloader()
-        elif choice == '2':
-            launch_mp4_downloader()
-        elif choice == '3':
+        if choice == "1":
+            launch("mp3_downloader.py")
+        elif choice == "2":
+            launch("mp4_downloader.py")
+        elif choice == "3":
             set_primary_directory()
-        elif choice == '0':
-            print("Exiting program.")
+        elif choice == "0":
             break
-        else:
-            print("Invalid choice. Please enter 1, 2, 3, or 0.")
 
 if __name__ == "__main__":
     main()
